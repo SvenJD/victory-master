@@ -3,9 +3,6 @@ var donation;
 var donationData = {};
 var id = location.search ? location.search.replace('?id=', '') : 0;
 
-// var username = "sven",
-//     password = "1qazxsw23edc";
-
 
 function createCORSRequest(method, url) {
   var xhr = new XMLHttpRequest();
