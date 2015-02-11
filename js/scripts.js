@@ -1,6 +1,7 @@
 var project;
 var donation;
 var donationData = {};
+var index;
 var id = location.search ? location.search.replace('?id=', '') : 0;
 
 
@@ -32,15 +33,12 @@ function createCORSRequest(method, url) {
   return xhr;
 }
 
-function makeCorsRequest() {
-  var page = parseInt(id/10),
-      index = (id % 10);
+function makeCorsRequest(url) {
 
-      $('#loader').css({display: 'block'})
-     $('#welcome h3').css({display: 'none'})
-     $('#welcome h4').css({display: 'none'})
+    $('#loader').css({display: 'block'})
+    $('#welcome h3').css({display: 'none'})
+    $('#welcome h4').css({display: 'none'})
   // All HTML5 Rocks properties support CORS.
-  var url = 'https://testing.onepercentclub.com/api/bb_projects/projects/?page=' + page;
 
   var xhr = createCORSRequest('GET', url);
   if (!xhr) {
@@ -56,9 +54,9 @@ function makeCorsRequest() {
     project = result.results[index];
     window.project = project;
     showProject(project);
-     $('#loader').css({display: 'none'})
-     $('#welcome h3').css({display: 'inline-block'})
-     $('#welcome h4').css({display: 'inline-block'})
+    $('#loader').css({display: 'none'})
+    $('#welcome h3').css({display: 'inline-block'})
+    $('#welcome h4').css({display: 'inline-block'})
   };
 
   xhr.onerror = function(err) {
@@ -73,6 +71,7 @@ function makeCorsRequestDonation(ProjectId, successCallback) {
   var projectCount = 'sol-y-frutas';
   var count = [];
   var test;
+
   // All HTML5 Rocks properties support CORS.
   var url = 'https://testing.onepercentclub.com/api/donations/project/?project=' + ProjectId;
 
@@ -88,6 +87,7 @@ function makeCorsRequestDonation(ProjectId, successCallback) {
     result = JSON.parse(xhr.response);
     // PROJECT INFORMATION IS IN 'result.results'
     console.log(result)
+    window.donations = result;
     successCallback(result.length);
   };
 
@@ -119,8 +119,7 @@ function showProject(project){
     $('.raised').html('I managed to raise' + '<font color="#FF619A">' + ' €' + project.amount_donated + '</font>')
     $('.days').html('In only ' + '<font color="#FF619A">' + calcDays(project.created, project.deadline) + '</font>' + ' days')
     
-    
-
+  
     var img = document.createElement('img');
     $('#overview .background .background-image').css('background-image', 'url(' + project.image.large + ')') 
     $('#fullscreen .background-image').css('background-image', 'url(' + project.image.full + ')')
@@ -129,7 +128,15 @@ function showProject(project){
 
     makeCorsRequestDonation(project.id, function (count) {
         $('.supporters').html('With the help of ' + '<font color="#FF619A">' + count + '</font>' + ' supporters')
-    })
+
+        // Do something with your donations and user avatars here
+        for (var i=0; i<window.donations.length; i++) {
+          // IF the donation has a user, and the avatar key is not empty, do something
+          if (window.donations[i].user && window.donations[i].user.avatar != "") {
+            console.log("Avatar: ", window.donations[i].user.avatar);
+          }
+        }
+    });
 
     mapUrl = 'https://maps.googleapis.com/maps/api/staticmap?size=640x450&language=english&scale=2&zoom=6&maptype=roadmap&key=AIzaSyCtV9YdifhUTWLtOoC1T-JNew34FelyuBk&';
     mapUrl += 'center=' + project.latitude + ',' + project.longitude;
@@ -147,9 +154,6 @@ function showProject(project){
 
 $(document).ready(function(){
 
-
-
-    
     $('.curtains').curtain({
         scrollSpeed:1200
     });
@@ -201,7 +205,12 @@ $(document).ready(function(){
     //  delay: 3600, duration:200, property:'top', start:250, end:450
     // });
     
-    
-    makeCorsRequest();
+  
+    //Get Project details
+    var page = parseInt(id/10);
+    index = (id % 10);
+    var projectPageUrl = 'https://testing.onepercentclub.com/api/bb_projects/projects/?page=' + page;
+    makeCorsRequest(projectPageUrl);
+
 
 });
