@@ -367,6 +367,14 @@ section {
 
 }
 
+#supporters h3 {
+	color: black;
+}
+
+.supporters-list p {
+	color: black;
+}
+
 #fullscreen ul li {
 	list-style: none;
 	margin: auto;

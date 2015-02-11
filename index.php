@@ -94,6 +94,13 @@
 		</section>
 	</li>
 	<li>
+		<section id="supporters">
+			<h3>Meet the supporters of my project</h3>
+			<ul class="supporters-list">
+			</ul>
+		</section>
+	</li>
+	<li>
 		<section id="fullscreen">
 			<ul>
 				<li>

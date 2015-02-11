@@ -132,8 +132,9 @@ function showProject(project){
         // Do something with your donations and user avatars here
         for (var i=0; i<window.donations.length; i++) {
           // IF the donation has a user, and the avatar key is not empty, do something
-          if (window.donations[i].user && window.donations[i].user.avatar != "") {
+          if (window.donations[i].user) {
             console.log("Avatar: ", window.donations[i].user.avatar);
+            $('.supporters-list').append('<li><p>' + window.donations[i].user.full_name + '</p><img src="' + window.donations[i].user.avatar + '" </img></li>');
           }
         }
     });
